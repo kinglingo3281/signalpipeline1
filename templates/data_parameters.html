@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Data Parameters - AutoZAP Trading Signal System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h1 class="mb-4">Data Parameters</h1>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Data Fetching Settings</h5>
+            </div>
+            <div class="card-body">
+                <form action="/data-parameters" method="post">
+                    <div class="mb-3">
+                        <label for="atr_interval" class="form-label">ATR Interval</label>
+                        <select class="form-select" id="atr_interval" name="atr_interval">
+                            <option value="5m" {% if data_config.get('intervals', {}).get('atr') == '5m' %}selected{% endif %}>5 Minutes</option>
+                            <option value="15m" {% if data_config.get('intervals', {}).get('atr') == '15m' %}selected{% endif %}>15 Minutes</option>
+                            <option value="30m" {% if data_config.get('intervals', {}).get('atr') == '30m' %}selected{% endif %}>30 Minutes</option>
+                            <option value="1h" {% if data_config.get('intervals', {}).get('atr') == '1h' %}selected{% endif %}>1 Hour</option>
+                            <option value="4h" {% if data_config.get('intervals', {}).get('atr') == '4h' %}selected{% endif %}>4 Hours</option>
+                            <option value="1d" {% if data_config.get('intervals', {}).get('atr') == '1d' %}selected{% endif %}>1 Day</option>
+                        </select>
+                        <div class="form-text">The timeframe to use for ATR (Average True Range) calculation</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="price_interval" class="form-label">Price Data Interval</label>
+                        <select class="form-select" id="price_interval" name="price_interval">
+                            <option value="1m" {% if data_config.get('intervals', {}).get('price') == '1m' %}selected{% endif %}>1 Minute</option>
+                            <option value="5m" {% if data_config.get('intervals', {}).get('price') == '5m' %}selected{% endif %}>5 Minutes</option>
+                            <option value="15m" {% if data_config.get('intervals', {}).get('price') == '15m' %}selected{% endif %}>15 Minutes</option>
+                            <option value="30m" {% if data_config.get('intervals', {}).get('price') == '30m' %}selected{% endif %}>30 Minutes</option>
+                            <option value="1h" {% if data_config.get('intervals', {}).get('price') == '1h' %}selected{% endif %}>1 Hour</option>
+                        </select>
+                        <div class="form-text">The timeframe to use for price data</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="price_results" class="form-label">Price Results Count</label>
+                        <input type="number" class="form-control" id="price_results" name="price_results" 
+                               value="{{ data_config.get('results', {}).get('price', 300) }}" min="50" max="1000">
+                        <div class="form-text">The number of price candles to fetch (more data points = more accurate percentiles but slower)</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Save Data Parameters</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Understanding Data Parameters</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <p><strong>ATR Interval</strong> - The timeframe used for calculating the Average True Range, which affects stop loss and take profit levels.</p>
+                    <p><strong>Price Data Interval</strong> - The timeframe for price data used in signal generation.</p>
+                    <p><strong>Price Results Count</strong> - The number of price candles to fetch. More data points provide more accurate percentile calculations but require more API calls.</p>
+                    <p class="mb-0">
+                        <strong>Note:</strong> Changing these parameters will affect signal generation. 
+                        Smaller timeframes provide more signals but may be noisier. 
+                        Larger timeframes provide fewer, potentially higher-quality signals.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

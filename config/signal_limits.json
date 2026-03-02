@@ -1,0 +1,5 @@
+{
+  "signal_period_hours": 1,
+  "max_long_signals": 2,
+  "max_short_signals": 2
+}

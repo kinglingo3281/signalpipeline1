@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Exchange Configuration - AutoZAP Trading Signal System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h1 class="mb-4">Exchange Configuration</h1>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Exchange Settings</h5>
+            </div>
+            <div class="card-body">
+                <form action="/api-config" method="post">
+                    <div class="mb-3">
+                        <label for="primary_exchange" class="form-label">Primary Exchange</label>
+                        <select class="form-select" id="primary_exchange" name="primary_exchange">
+                            <option value="gateio" {% if config.get('primary_exchange') == 'gateio' %}selected{% endif %}>Gate.io</option>
+                            <option value="binance" {% if config.get('primary_exchange') == 'binance' %}selected{% endif %}>Binance</option>
+                            <option value="bybit" {% if config.get('primary_exchange') == 'bybit' %}selected{% endif %}>Bybit</option>
+                            <option value="coinbase" {% if config.get('primary_exchange') == 'coinbase' %}selected{% endif %}>Coinbase</option>
+                            <option value="kraken" {% if config.get('primary_exchange') == 'kraken' %}selected{% endif %}>Kraken</option>
+                            <option value="okx" {% if config.get('primary_exchange') == 'okx' %}selected{% endif %}>OKX</option>
+                            <option value="kucoin" {% if config.get('primary_exchange') == 'kucoin' %}selected{% endif %}>KuCoin</option>
+                        </select>
+                        <small class="form-text text-muted">Primary exchange for fetching price data</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="backup_exchanges" class="form-label">Backup Exchanges</label>
+                        <input type="text" class="form-control" id="backup_exchanges" name="backup_exchanges" value="{{ ','.join(config.get('backup_exchanges', ['binance', 'bybit'])) }}">
+                        <small class="form-text text-muted">Comma-separated list of backup exchanges (e.g., binance,bybit,okx)</small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Save Configuration</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Data Source Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <p><strong>Direct Exchange Data</strong> - AutoZAP fetches data directly from exchanges using CCXT.</p>
+                    <p>No external API keys required! The system uses public market data to get:</p>
+                    <ul>
+                        <li>Price candles (OHLCV) for each trading pair</li>
+                        <li>ATR (Average True Range) calculated locally</li>
+                        <li>Support/Resistance levels from historical highs/lows</li>
+                    </ul>
+                    <p>If the primary exchange fails for a symbol, the system automatically tries backup exchanges.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

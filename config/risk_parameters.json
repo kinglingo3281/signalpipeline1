@@ -1,0 +1,5 @@
+{
+  "default_vault_balance": 500,
+  "long_risk": 0.003,
+  "short_risk": 0.003
+}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Risk Parameters - AutoZAP Trading Signal System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h1 class="mb-4">Risk Parameters</h1>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Risk Management Settings</h5>
+            </div>
+            <div class="card-body">
+                <form action="/risk-parameters" method="post">
+                    <div class="mb-3">
+                        <label for="vault_balance" class="form-label">Default Vault Balance</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" id="vault_balance" name="vault_balance" 
+                                   value="{{ risk_config.get('default_vault_balance', 500) }}" step="0.01" min="0">
+                        </div>
+                        <div class="form-text">The default balance used for position sizing calculations</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="long_risk" class="form-label">Long Position Risk</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="long_risk" name="long_risk" 
+                                   value="{{ risk_config.get('long_risk', 0.003) }}" step="0.001" min="0" max="1">
+                            <span class="input-group-text">%</span>
+                        </div>
+                        <div class="form-text">Risk per trade for long positions (e.g., 0.003 = 0.3%)</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="short_risk" class="form-label">Short Position Risk</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="short_risk" name="short_risk" 
+                                   value="{{ risk_config.get('short_risk', 0.003) }}" step="0.001" min="0" max="1">
+                            <span class="input-group-text">%</span>
+                        </div>
+                        <div class="form-text">Risk per trade for short positions (e.g., 0.003 = 0.3%)</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Save Risk Parameters</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Understanding Risk Parameters</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <p><strong>Vault Balance</strong> - The default account balance used for calculating position sizes.</p>
+                    <p><strong>Risk Per Trade</strong> - The percentage of your vault balance that you're willing to risk on a single trade.</p>
+                    <p>For example, with a vault balance of $1000 and a risk of 0.3% (0.003), the maximum you would risk on a single trade is $3.</p>
+                    <p>Lower risk percentages lead to smaller position sizes but limit potential losses.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

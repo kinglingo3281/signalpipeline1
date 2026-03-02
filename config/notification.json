@@ -1,0 +1,6 @@
+{
+  "telegram": {
+    "webhook_url": "https://api.telegram.org/bot[YOUR_BOT_TOKEN]/sendMessage?chat_id=[YOUR_CHAT_ID]",
+    "enabled": true
+  }
+}

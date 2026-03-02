@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block title %}Signal Parameters - AutoZAP Trading Signal System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h1 class="mb-4">Signal Generation Parameters</h1>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Fibonacci Levels</h5>
+            </div>
+            <div class="card-body">
+                <form action="/signal-parameters" method="post" id="fibonacciForm">
+                    <input type="hidden" name="form_type" value="fibonacci">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="fib_level1" class="form-label">Level 1 (78.6%)</label>
+                            <input type="number" class="form-control" id="fib_level1" name="fib_level1" 
+                                   value="{{ signal_params.get('fibonacci_levels', {}).get('level1', 0.786) }}" 
+                                   step="0.001" min="0" max="1">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="fib_level2" class="form-label">Level 2 (61.8%)</label>
+                            <input type="number" class="form-control" id="fib_level2" name="fib_level2" 
+                                   value="{{ signal_params.get('fibonacci_levels', {}).get('level2', 0.618) }}" 
+                                   step="0.001" min="0" max="1">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="fib_level3" class="form-label">Level 3 (50.0%)</label>
+                            <input type="number" class="form-control" id="fib_level3" name="fib_level3" 
+                                   value="{{ signal_params.get('fibonacci_levels', {}).get('level3', 0.500) }}" 
+                                   step="0.001" min="0" max="1">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="fib_level4" class="form-label">Level 4 (38.2%)</label>
+                            <input type="number" class="form-control" id="fib_level4" name="fib_level4" 
+                                   value="{{ signal_params.get('fibonacci_levels', {}).get('level4', 0.382) }}" 
+                                   step="0.001" min="0" max="1">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="fib_level5" class="form-label">Level 5 (23.6%)</label>
+                            <input type="number" class="form-control" id="fib_level5" name="fib_level5" 
+                                   value="{{ signal_params.get('fibonacci_levels', {}).get('level5', 0.236) }}" 
+                                   step="0.001" min="0" max="1">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Fibonacci Levels</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">ATR Multipliers</h5>
+            </div>
+            <div class="card-body">
+                <form action="/signal-parameters" method="post" id="atrForm">
+                    <input type="hidden" name="form_type" value="atr">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="long_sl" class="form-label">Long Stop Loss Multiplier</label>
+                            <input type="number" class="form-control" id="long_sl" name="long_sl" 
+                                   value="{{ signal_params.get('atr_multipliers', {}).get('long_sl', 1.5) }}" 
+                                   step="0.1" min="0.1">
+                            <div class="form-text">ATR multiplier for long position stop loss (higher = wider stop)</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="long_tp" class="form-label">Long Take Profit Multiplier</label>
+                            <input type="number" class="form-control" id="long_tp" name="long_tp" 
+                                   value="{{ signal_params.get('atr_multipliers', {}).get('long_tp', 2.0) }}" 
+                                   step="0.1" min="0.1">
+                            <div class="form-text">ATR multiplier for long position take profit (higher = larger target)</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="short_sl" class="form-label">Short Stop Loss Multiplier</label>
+                            <input type="number" class="form-control" id="short_sl" name="short_sl" 
+                                   value="{{ signal_params.get('atr_multipliers', {}).get('short_sl', 1.5) }}" 
+                                   step="0.1" min="0.1">
+                            <div class="form-text">ATR multiplier for short position stop loss (higher = wider stop)</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="short_tp" class="form-label">Short Take Profit Multiplier</label>
+                            <input type="number" class="form-control" id="short_tp" name="short_tp" 
+                                   value="{{ signal_params.get('atr_multipliers', {}).get('short_tp', 2.0) }}" 
+                                   step="0.1" min="0.1">
+                            <div class="form-text">ATR multiplier for short position take profit (higher = larger target)</div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save ATR Multipliers</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Price Percentiles</h5>
+            </div>
+            <div class="card-body">
+                <form action="/signal-parameters" method="post" id="percentilesForm">
+                    <input type="hidden" name="form_type" value="percentiles">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="counter_trend_percentile" class="form-label">Counter-Trend Percentile</label>
+                            <input type="number" class="form-control" id="counter_trend_percentile" name="counter_trend_percentile" 
+                                   value="{{ signal_params.get('price_percentiles', {}).get('counter_trend_percentile', 0.85) }}" 
+                                   step="0.01" min="0" max="1">
+                            <div class="form-text">
+                                Percentile used for counter-trend trade identification (0.85 = 85th percentile).
+                                Higher values mean more extreme conditions required for signals.
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Price Percentiles</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Support & Resistance</h5>
+            </div>
+            <div class="card-body">
+                <form action="/signal-parameters" method="post" id="supportResistanceForm">
+                    <input type="hidden" name="form_type" value="support_resistance">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="min_distance" class="form-label">Minimum Distance (%)</label>
+                            <input type="number" class="form-control" id="min_distance" name="min_distance" 
+                                   value="{{ signal_params.get('support_resistance', {}).get('minimum_distance_percent', 1.0) }}" 
+                                   step="0.1" min="0.1">
+                            <div class="form-text">
+                                Minimum distance (as percentage of price) required between levels to be considered valid
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="max_distance" class="form-label">Maximum Distance (%)</label>
+                            <input type="number" class="form-control" id="max_distance" name="max_distance" 
+                                   value="{{ signal_params.get('support_resistance', {}).get('maximum_distance_percent', 5.0) }}" 
+                                   step="0.1" min="0.1">
+                            <div class="form-text">
+                                Maximum distance (as percentage of price) allowed for a level to be considered relevant
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Support & Resistance Parameters</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Understanding Signal Parameters</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h5>Fibonacci Levels</h5>
+                    <p>Fibonacci retracement levels are used to identify potential support and resistance areas. The default values are the standard Fibonacci ratios (23.6%, 38.2%, 50%, 61.8%, and 78.6%).</p>
+                    
+                    <h5>ATR Multipliers</h5>
+                    <p>ATR (Average True Range) is used to determine volatility-based stop loss and take profit levels. Higher multipliers mean wider stops and larger profit targets.</p>
+                    
+                    <h5>Price Percentiles</h5>
+                    <p>The counter-trend percentile determines how extreme price must be before generating a counter-trend signal. A value of 0.85 means price must be in the top 15% of the recent range.</p>
+                    
+                    <h5>Support & Resistance</h5>
+                    <p>These parameters control how the system identifies and uses support and resistance levels. Setting minimum distance prevents clustering of levels, while maximum distance ensures levels are relevant to current price action.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

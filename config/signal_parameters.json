@@ -1,0 +1,42 @@
+{
+  "fibonacci_levels": {
+    "level1": 0.786,
+    "level2": 0.618,
+    "level3": 0.500,
+    "level4": 0.382,
+    "level5": 0.236
+  },
+  "atr_multipliers": {
+    "long_sl_na_min": 2.5,
+    "long_sl_na_max": 3.5,
+    "long_sl_on_min": 3.5,
+    "long_sl_on_max": 4.5,
+    "long_sl_off_min": 2.5,
+    "long_sl_off_max": 3.5,
+    "long_tp_na_min": 2.5,
+    "long_tp_na_max": 3.5,
+    "long_tp_on_min": 3.5,
+    "long_tp_on_max": 4.5,
+    "long_tp_off_min": 1.5,
+    "long_tp_off_max": 2.5,
+    "short_sl_na_min": 2.5,
+    "short_sl_na_max": 3.5,
+    "short_sl_on_min": 2.5,
+    "short_sl_on_max": 3.5,
+    "short_sl_off_min": 3.5,
+    "short_sl_off_max": 4.5,
+    "short_tp_na_min": 2.5,
+    "short_tp_na_max": 3.5,
+    "short_tp_on_min": 1.5,
+    "short_tp_on_max": 2.5,
+    "short_tp_off_min": 3.5,
+    "short_tp_off_max": 4.5
+  },
+  "price_percentiles": {
+    "counter_trend_percentile": 0.85
+  },
+  "support_resistance": {
+    "minimum_distance_percent": 1.0,
+    "maximum_distance_percent": 5.0
+  }
+}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Schedule - AutoZAP Trading Signal System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h1 class="mb-4">Execution Schedule</h1>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Schedule Settings</h5>
+            </div>
+            <div class="card-body">
+                <form action="/schedule" method="post">
+                    <div class="mb-3">
+                        <label for="run_at_minutes" class="form-label">Run at Minutes Past Each Hour</label>
+                        <input type="text" class="form-control" id="run_at_minutes" name="run_at_minutes" 
+                               value="{{ schedule_config.get('run_at_minutes', [1, 31])|join(', ') }}" 
+                               placeholder="e.g., 0, 15, 30, 45">
+                        <div class="form-text">
+                            Enter comma-separated minutes (0-59) when the system should run each hour.
+                            For example, "0, 30" will run at the top and bottom of each hour.
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Save Schedule</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Schedule Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <p><strong>Current Schedule:</strong> The system will run at <strong>{{ schedule_config.get('run_at_minutes', [1, 31])|join(', ') }}</strong> minutes past each hour.</p>
+                    
+                    <p>This means the system will run <strong>{{ schedule_config.get('run_at_minutes', [1, 31])|length }} times</strong> per hour, for a total of <strong>{{ schedule_config.get('run_at_minutes', [1, 31])|length * 24 }} runs</strong> per day.</p>
+                    
+                    <p>
+                        <strong>Note:</strong> Each run will fetch data and generate signals for all enabled trading pairs.
+                        Be mindful of API rate limits when setting the schedule.
+                    </p>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <p><strong>Important:</strong> Changes to the schedule will take effect after the system is restarted.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

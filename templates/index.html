@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - AutoZAP Trading Signal System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h1 class="mb-4">Dashboard</h1>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-exchange-alt me-2"></i>Trading Pairs</h5>
+                        <p class="card-text fs-1 text-center" id="pairs-count">...</p>
+                    </div>
+                    <div class="card-footer bg-primary border-0">
+                        <a href="/trading-pairs" class="text-white text-decoration-none">
+                            <small>Manage Trading Pairs <i class="fas fa-arrow-right ms-1"></i></small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-clock me-2"></i>Schedule</h5>
+                        <p class="card-text fs-1 text-center" id="schedule-info">...</p>
+                    </div>
+                    <div class="card-footer bg-success border-0">
+                        <a href="/schedule" class="text-white text-decoration-none">
+                            <small>Manage Schedule <i class="fas fa-arrow-right ms-1"></i></small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-key me-2"></i>API Status</h5>
+                        <p class="card-text fs-1 text-center" id="api-status">...</p>
+                    </div>
+                    <div class="card-footer bg-info border-0">
+                        <a href="/api-config" class="text-white text-decoration-none">
+                            <small>Manage API Configuration <i class="fas fa-arrow-right ms-1"></i></small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Risk Management</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm" id="risk-table">
+                            <tbody>
+                                <tr>
+                                    <th>Vault Balance:</th>
+                                    <td id="vault-balance">Loading...</td>
+                                </tr>
+                                <tr>
+                                    <th>Long Risk:</th>
+                                    <td id="long-risk">Loading...</td>
+                                </tr>
+                                <tr>
+                                    <th>Short Risk:</th>
+                                    <td id="short-risk">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <a href="/risk-parameters" class="btn btn-sm btn-outline-primary">Edit Risk Parameters</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-bell me-2"></i>Notification Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm" id="notification-table">
+                            <tbody>
+                                <tr>
+                                    <th>Telegram Status:</th>
+                                    <td id="telegram-status">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <a href="/notification" class="btn btn-sm btn-outline-primary">Edit Notification Settings</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-database me-2"></i>Data Parameters</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm" id="data-table">
+                            <tbody>
+                                <tr>
+                                    <th>ATR Interval:</th>
+                                    <td id="atr-interval">Loading...</td>
+                                </tr>
+                                <tr>
+                                    <th>Price Interval:</th>
+                                    <td id="price-interval">Loading...</td>
+                                </tr>
+                                <tr>
+                                    <th>Price Results:</th>
+                                    <td id="price-results">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <a href="/data-parameters" class="btn btn-sm btn-outline-primary">Edit Data Parameters</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to fetch data from API endpoints
+    function fetchConfigData() {
+        // Use AJAX to check the config directly
+        fetch('/api/check-config')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('pairs-count').textContent = data.trading_pairs_count || 0;
+            });
+
+            
+        // Fetch schedule config
+        fetch('/schedule')
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const scheduleInput = doc.querySelector('input[name="run_at_minutes"]');
+                if (scheduleInput) {
+                    document.getElementById('schedule-info').textContent = scheduleInput.value;
+                }
+            });
+            
+        // Fetch API status
+        fetch('/api/check-config')
+            .then(response => response.json())
+            .then(data => {
+                const apiStatusEl = document.getElementById('api-status');
+                if (data.has_api_key) {
+                    apiStatusEl.textContent = '✓';
+                    apiStatusEl.classList.add('text-success');
+                } else {
+                    apiStatusEl.textContent = 'X';
+                    apiStatusEl.classList.add('text-danger');
+                }
+            });
+            
+        // Fetch risk parameters
+        fetch('/risk-parameters')
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                const vaultInput = doc.querySelector('input[name="vault_balance"]');
+                if (vaultInput) {
+                    document.getElementById('vault-balance').textContent = vaultInput.value;
+                }
+                
+                const longRiskInput = doc.querySelector('input[name="long_risk"]');
+                if (longRiskInput) {
+                    document.getElementById('long-risk').textContent = longRiskInput.value;
+                }
+                
+                const shortRiskInput = doc.querySelector('input[name="short_risk"]');
+                if (shortRiskInput) {
+                    document.getElementById('short-risk').textContent = shortRiskInput.value;
+                }
+            });
+            
+        // Fetch notification settings
+        fetch('/notification')
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                const enabledCheckbox = doc.querySelector('input[name="enabled"]');
+                if (enabledCheckbox) {
+                    const status = enabledCheckbox.checked ? 'Enabled' : 'Disabled';
+                    document.getElementById('telegram-status').textContent = status;
+                }
+            });
+            
+        // Directly get data parameters via backend API
+        fetch('/data-parameters')
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Since these are select elements, we need to check for selected options
+                const atrIntervalSelect = doc.querySelector('#atr_interval');
+                if (atrIntervalSelect) {
+                    const selectedOption = atrIntervalSelect.querySelector('option[selected]');
+                    if (selectedOption) {
+                        document.getElementById('atr-interval').textContent = selectedOption.textContent;
+                    } else {
+                        document.getElementById('atr-interval').textContent = '1 Hour'; // Default
+                    }
+                }
+                
+                const priceIntervalSelect = doc.querySelector('#price_interval');
+                if (priceIntervalSelect) {
+                    const selectedOption = priceIntervalSelect.querySelector('option[selected]');
+                    if (selectedOption) {
+                        document.getElementById('price-interval').textContent = selectedOption.textContent;
+                    } else {
+                        document.getElementById('price-interval').textContent = '5 Minutes'; // Default
+                    }
+                }
+                
+                const priceResultsInput = doc.querySelector('#price_results');
+                if (priceResultsInput) {
+                    document.getElementById('price-results').textContent = priceResultsInput.value || '300';
+                } else {
+                    document.getElementById('price-results').textContent = '300'; // Default
+                }
+            });
+    }
+    
+    // Fetch data on page load
+    fetchConfigData();
+});
+</script>
+{% endblock %}

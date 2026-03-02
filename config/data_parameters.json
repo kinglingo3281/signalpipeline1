@@ -1,0 +1,9 @@
+{
+  "intervals": {
+    "atr": "1h",
+    "price": "5m"
+  },
+  "results": {
+    "price": 300
+  }
+}

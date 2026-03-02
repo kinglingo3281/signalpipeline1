@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Signal Limits - AutoZAP Trading Signal System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h1 class="mb-4">Signal Rate Limiting</h1>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Signal Limit Settings</h5>
+            </div>
+            <div class="card-body">
+                <form action="/signal-limits" method="post">
+                    <div class="mb-3">
+                        <label for="signal_period_hours" class="form-label">Signal Period (Hours)</label>
+                        <input type="number" min="1" max="24" class="form-control" id="signal_period_hours" 
+                               name="signal_period_hours" value="{{ config.get('signal_period_hours', 6) }}">
+                        <div class="form-text">Time period for signal rate limiting (in hours)</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="max_long_signals" class="form-label">Maximum Long Signals Per Period</label>
+                        <input type="number" min="1" max="10" class="form-control" id="max_long_signals" 
+                               name="max_long_signals" value="{{ config.get('max_long_signals', 1) }}">
+                        <div class="form-text">Maximum number of LONG signals allowed per trading pair in each period</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="max_short_signals" class="form-label">Maximum Short Signals Per Period</label>
+                        <input type="number" min="1" max="10" class="form-control" id="max_short_signals" 
+                               name="max_short_signals" value="{{ config.get('max_short_signals', 1) }}">
+                        <div class="form-text">Maximum number of SHORT signals allowed per trading pair in each period</div>
+                    </div>
+                    
+                    <div class="mb-3 alert alert-info">
+                        <p>These settings limit how many signals will be sent for each trading pair within the time period.</p>
+                        <p>By default, each trading pair is limited to 1 LONG and 1 SHORT signal every 6 hours.</p>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                </form>
+            </div>
+        </div>
+        
+        {% if signal_counts %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Current Signal Counts</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Trading Pair</th>
+                            <th>Long Signals</th>
+                            <th>Short Signals</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pair, counts in signal_counts.items() %}
+                        <tr>
+                            <td>{{ pair }}</td>
+                            <td>{{ counts.get('long', 0) }} / {{ config.get('max_long_signals', 1) }}</td>
+                            <td>{{ counts.get('short', 0) }} / {{ config.get('max_short_signals', 1) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+        
+    </div>
+</div>
+{% endblock %}

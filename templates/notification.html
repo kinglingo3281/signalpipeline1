@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Notification Settings - AutoZAP Trading Signal System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h1 class="mb-4">Notification Settings</h1>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Telegram Settings</h5>
+            </div>
+            <div class="card-body">
+                <form action="/notification" method="post">
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="enabled" name="enabled" 
+                                  {% if notification_config.get('telegram', {}).get('enabled', True) %}checked{% endif %}>
+                            <label class="form-check-label" for="enabled">Enable Telegram Notifications</label>
+                        </div>
+                        <div class="form-text">Turn notifications on or off without removing your webhook URL</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="webhook_url" class="form-label">Telegram Webhook URL</label>
+                        <input type="text" class="form-control" id="webhook_url" name="webhook_url" 
+                               value="{{ notification_config.get('telegram', {}).get('webhook_url', '') }}">
+                        <div class="form-text">
+                            Your Telegram webhook URL in the format:<br>
+                            <code>https://api.telegram.org/bot[BOT_TOKEN]/sendMessage?chat_id=[CHAT_ID]</code>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Save Notification Settings</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Setting Up Telegram</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <p><strong>How to set up Telegram notifications:</strong></p>
+                    <ol>
+                        <li>Create a new Telegram bot using <a href="https://t.me/BotFather" target="_blank">@BotFather</a></li>
+                        <li>Get your chat ID by sending a message to <a href="https://t.me/userinfobot" target="_blank">@userinfobot</a></li>
+                        <li>Construct your webhook URL using this format:
+                            <code>https://api.telegram.org/bot[BOT_TOKEN]/sendMessage?chat_id=[CHAT_ID]</code>
+                        </li>
+                        <li>Enter this URL in the field above</li>
+                        <li>Make sure to message your bot first to allow it to send you messages</li>
+                    </ol>
+                </div>
+                
+                <div class="alert alert-warning mt-3">
+                    <p><strong>Testing your webhook:</strong></p>
+                    <p>After saving your webhook URL, the system will use it when generating signals. You can manually trigger a signal generation run to test if your Telegram notifications are working correctly.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
