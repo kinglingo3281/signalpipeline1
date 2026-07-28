@@ -1,3 +1,5 @@
+> **Public portfolio snapshot:** This repository is a sanitized export of selected components from a larger private production system developed between 2023 and 2026. Original Git history, production credentials, user information, private endpoints, proprietary logic, restricted integrations, internal infrastructure, and some newer revisions are intentionally excluded. The public commit demonstrates selected architecture and implementation work; it does not represent the original development timeline or a complete production deployment.
+
 # Signal Pipeline
 
 A standalone Python signal engine that generates trading signals from exchange data via CCXT and delivers them to multiple endpoints — Telegram for notifications and an SSE server for real-time client distribution.
