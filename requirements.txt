@@ -1,6 +1,6 @@
 requests==2.31.0
 schedule==1.2.1
-python-dotenv==1.0.0
+python-dotenv==1.2.2
 flask==2.3.3
 flask-wtf==1.2.1
 wtforms==3.0.1
